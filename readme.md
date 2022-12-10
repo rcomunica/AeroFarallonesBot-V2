@@ -2,7 +2,7 @@
 
 <h3>Este bot fue creado tecnicamente por que un mamerto lo pidio</h3>
 
-<h5>Caracterisitcas</h5>
+<p>Caracterisitcas</p>
 
 <ul>
     <li>1</li>
