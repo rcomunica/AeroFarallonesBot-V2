@@ -1,3 +1,5 @@
+const { joinVoiceChannel } = require('@discordjs/voice');
+
 /** 
  * 
  * Mensaje para el futuro developer de este bot
@@ -15,8 +17,9 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+const { Client, Collection, Events, GatewayIntentBits, discordSort, EmbedBuilder } = require('discord.js');
 const { token } = require('./config.json');
+const { channel } = require('node:diagnostics_channel');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -45,10 +48,64 @@ client.on(Events.InteractionCreate, async interaction => {
 		await command.execute(interaction);
 	} catch (error) {
 		console.error(error);
-		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		await interaction.reply({ content: 'Revise esos logs papito!', ephemeral: true });
 	}
 });
 
 /** FIN DE LA TORTURA :D */
+
+
+
+
+client.on('interactionCreate', async interaction =>{
+
+	function conexion(){
+		const connection = joinVoiceChannel({
+			channelId: interaction.member.voice.channelId,
+			guildId: interaction.guild.id,
+			adapterCreator: interaction.guild.voiceAdapterCreator,
+			selfDeaf: true,
+		});
+	}
+
+	console.log(`/${interaction.commandName} se ha ejecutado`)
+
+	if(interaction.commandName == 'join'){
+
+		let JoinEmbed  = new EmbedBuilder()
+		.setColor('#00157f')
+		.setAuthor({ name: interaction.user.username, iconURL: interaction.user.avatarURL()})
+		.setDescription(`Se ha unido exitoxamente a un canal de voz \n\n ¿cual? ni idea pero se unio`)
+
+		conexion()
+
+		interaction.channel.send({ embeds: [JoinEmbed]});
+		
+	}
+
+	if(interaction.commandName == 'leave'){
+		
+
+		const connection = joinVoiceChannel({
+			channelId: interaction.member.voice.channelId,
+			guildId: interaction.guild.id,
+			adapterCreator: interaction.guild.voiceAdapterCreator,
+			selfDeaf: true,
+		});
+
+		connection.destroy();
+
+		let LeaveEmbed  = new EmbedBuilder()
+		.setColor('#00157f')
+		.setAuthor({ name: interaction.user.username, iconURL: interaction.user.avatarURL()})
+		.setDescription(`Faralloncito bot se salio del canal fantasma :maurisio:`)
+
+		interaction.channel.send({ embeds: [LeaveEmbed]});
+
+	}
+	
+
+});
+
 
 client.login(token);
